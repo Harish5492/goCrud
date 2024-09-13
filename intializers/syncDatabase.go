@@ -1,6 +1,6 @@
 package intializers
 
-import "github.com/HarishRana/goCrud/src/models"
+import "github.com/HarishRana/goCrud/models"
 
 func SyncDatabase() {
 	DB.AutoMigrate(&models.User{})

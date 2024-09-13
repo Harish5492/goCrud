@@ -4,15 +4,17 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"os"
-  )
-  var DB *gorm.DB
-  func main() {
+	"log"
+)
 
-	var err Error;
+var DB *gorm.DB
+
+func InitDatabase() {
 	dsn := os.Getenv("DATABASE")
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	var err error
+	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 
-	if err !=nil {
-		log.Fatal("Error In Connecting the Database")
+	if err != nil {
+		log.Fatalf("Error connecting to the database: %v", err)
 	}
-  }
+}
