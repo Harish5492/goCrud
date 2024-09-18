@@ -14,7 +14,7 @@ func init() {
 	intializers.LoadEnvVariables()
 	intializers.ConnectToDatabase()
 	// initialize logger
-	configurations.SetupLogger()
+	common.SetupLogger()
 }
 
 func main() {

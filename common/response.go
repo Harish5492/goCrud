@@ -29,5 +29,7 @@ func ReturnGenericSuccessWithMessageResponse(c *gin.Context, data interface{}, m
 }
 
 func ReturnGenericSuccessWithNoMessageResponse(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{})
+	c.JSON(http.StatusOK, gin.H{
+		"message":"Sign Up successfully",
+	})
 }
