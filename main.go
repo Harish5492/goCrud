@@ -24,6 +24,9 @@ func main() {
 	r := gin.Default()
 	r.POST("/signup", controllers.Signup)
 	r.POST("/login", controllers.Login)
+	r.PUT("/updateUser/:id", controllers.UpdateUser)  // Update user by ID
+	r.DELETE("/deleteUser/:id", controllers.DeleteUser) // Delete user by ID\
+	r.GET("/getAllUsers", controllers.GetAllUsers)
 
 	r.Run() // listen and serve on 0.0.0.0:8080
 }

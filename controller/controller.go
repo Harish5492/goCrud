@@ -122,3 +122,90 @@ func Login(c *gin.Context) {
 	// Send success response
 	common.ReturnGenericSuccessResponse(c,tokenString)
 }
+
+func UpdateUser(c *gin.Context) {
+	// Get the user ID from URL parameters
+	id := c.Param("id")
+
+	// Get the updated data from the request body
+	var body struct {
+		FullName string
+		Email    string
+		Password string
+	}
+
+	// Bind the request body to the struct
+	if err := c.Bind(&body); err != nil {
+		common.ReturnGenericBadResponse(c, "Invalid request body")
+		return
+	}
+
+	// Find the user by ID
+	var user models.User
+	if result := intializers.DB.First(&user, "id = ?", id); result.Error != nil {
+		common.ReturnGenericBadResponse(c, "User not found")
+		return
+	}
+
+	// Update the fields if provided
+	if body.FullName != "" {
+		user.FullName = body.FullName
+	}
+	if body.Email != "" {
+		user.Email = body.Email
+	}
+	if body.Password != "" {
+		hash, err := bcrypt.GenerateFromPassword([]byte(body.Password), 10)
+		if err != nil {
+			common.ReturnGenericBadResponse(c, "Failed to hash password")
+			return
+		}
+		user.Password = string(hash)
+	}
+
+	// Save the updated user data
+	if result := intializers.DB.Save(&user); result.Error != nil {
+		common.ReturnGenericBadResponse(c, "Failed to update user")
+		return
+	}
+
+	// Return success response
+	common.ReturnGenericSuccessResponse(c, "Updated Successfully")
+}
+func DeleteUser(c *gin.Context) {
+	// Get the user ID from URL parameters
+	id := c.Param("id")
+
+	// Find the user by ID
+	var user models.User
+	if result := intializers.DB.First(&user, "id = ?", id); result.Error != nil {
+		common.ReturnGenericBadResponse(c, "User not found")
+		return
+	}
+
+	// Delete the user
+	if result := intializers.DB.Delete(&user); result.Error != nil {
+		common.ReturnGenericBadResponse(c, "Failed to delete user")
+		return
+	}
+
+	// Return success response
+	common.ReturnGenericSuccessResponse(c, "Deleted Successfully")
+}
+
+// GetAllUsers fetches all users from the database
+func GetAllUsers(c *gin.Context) {
+	// Declare a slice to hold the users
+	var users []models.User
+
+	// Fetch all users from the database
+	if result := intializers.DB.Find(&users); result.Error != nil {
+		common.ReturnGenericBadResponse(c, "Failed to fetch users")
+		return
+	}
+
+	// Return the users in JSON format
+	c.JSON(200, gin.H{
+		"users": users,
+	})
+}
