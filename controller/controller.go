@@ -49,6 +49,7 @@ func Signup(c *gin.Context) {
 	// Create user
 	user := models.User{FullName: body.FullName, Email: body.Email, Password: string(hash)}
 	fmt.Printf("usere here is",user)
+	fmt.Println("baby doll main sone di",user)
 
 	// Add to the database
 	result := intializers.DB.Create(&user)
@@ -184,7 +185,7 @@ func DeleteUser(c *gin.Context) {
 	}
 
 	// Delete the user
-	if result := intializers.DB.Delete(&user); result.Error != nil {
+	if result := intializers.DB.Unscoped().Delete(&user); result.Error != nil {
 		common.ReturnGenericBadResponse(c, "Failed to delete user")
 		return
 	}
